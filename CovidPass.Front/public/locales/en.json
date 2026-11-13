@@ -1,0 +1,63 @@
+{
+  "common": {
+    "logout": "Logout"
+  },
+  "loginPage": {
+    "forEmployeeOnly": "This webpage is for [Your Company] employees only.",
+    "mainText": "During the COVID-19 crisis, all [Your Company] employees who work at a facility providing clinical care must attest to their wellness every day before entering their building. Please attest to your wellness no earlier than two hours before your shift starts and then follow instructions.",
+    "useCredentials": "Please use [Your Company] credentials to log in",
+    "username": "Username",
+    "password": "Password",
+    "login": "Login"
+  },
+  "surveyPage": {
+    "titleForSelfService": "[Your Company] COVID Pass.",
+    "titleForManualMode": "[Your Company] COVID Pass Manual Mode.",
+    "descriptionForSelfService": "Please complete this survey before beginning any shift at a [Your Company] facility. This survey will tell you whether you are eligible to work or not. It is not meant to provide clinical advice.",
+    "descriptionForManualMode": "Enter either User Name or Employee ID to populate the rest of the name fields. If employee does not know their user ID, please fill in first and last name.",
+    "employeeId": "Employee ID",
+    "or": "Or",
+    "for": "for",
+    "UserId": "User ID",
+    "lastName": "Last Name",
+    "firstName": "First Name",
+    "email": "Email",
+    "site": "Site",
+    "initials": "Initials",
+    "symptoms": "Symptoms",
+    "symptomsQuestion": "Are You Experiencing Any of the Following Symptoms",
+    "fever": "Fever or feeling feverish",
+    "soreThroat": "Sore throat",
+    "cough": "New cough (not related to chronic condition)",
+    "runnyNose": "New nasal congestion or new runny nose (not related to seasonal allergies)",
+    "muscleAche": "Muscle aches",
+    "newLossOfSmell": "New loss of smell",
+    "shortnessOfBreath": "Shortness of breath",
+    "noSymptoms": "No Symptoms",
+    "noSymptoms_text1": "NONE OF THE ABOVE SYMPTOMS",
+    "noSymptoms_text2": "YOU ARE CLEARED FOR WORK TODAY.",
+    "noSymptoms_text3": "By placing my initials below, I attest that my answers are accurate.",
+    "noSymptoms_text4": "Enter your initials to attest.",
+    "symptoms_text1": "YOU HAVE INDICATED ONE OR MORE SYMPTOMS",
+    "symptoms_text2": "YOU ARE NOT CLEARED FOR WORK TODAY!",
+    "symptoms_text3": "DO NOT GO TO WORK. PLEASE CALL YOUR MANAGER AND THE OCCUPATIONAL HEALTH COVID HOTLINE",
+    "symptoms_text4": "Additional INFO ",
+    "symptoms_text5": "If you need immediate medical assistance, call your healthcare provider or dial 911",
+    "pressSubmit": "Please press submit button to get COVID Pass",
+    "submit": "Submit",
+    "provideValue": "Provide a value for "
+  },
+  "applicationPage": {
+    "nodata": "There is no data to show.",
+    "covidPass": "COVID Pass",
+    "noSymptoms_clearedForWork": "CLEARED FOR WORK",
+    "noSymptoms_description": "You are cleared for work and may start your shift after getting a mask from your location’s distribution center.",
+    "symptoms_notClearedForWork": "NOT CLEARED FOR WORK",
+    "symptoms_description1": "You are NOT cleared for work and may not enter your building. Please contact your manager and Occupational Health at ",
+    "symptoms_description2": "Additional INFO ",
+    "footer_sentToEmail": "A copy of your attestation has been sent to your email",
+    "footer_healthConcerns": "If you have health concerns, please contact your healthcare provider.",
+    "footer_needAssistance": "If you need assistance, please call the Occupational Health COVID-19 HOTLINE at ",
+    "footer_returnToForm": "Return to form"
+  }
+}

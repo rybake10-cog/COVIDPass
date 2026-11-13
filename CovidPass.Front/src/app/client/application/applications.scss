@@ -1,0 +1,62 @@
+.application {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  .applicationResult {
+    background: #fff;
+    max-width: 50rem;
+  }
+  .footerStyle {
+    margin: 40px;
+    font-size: 12px;
+    text-align: center;
+  }
+  .footerPanel {
+    padding: 1rem;
+    @media print {
+      display: none;
+    }
+    .buttonsPanel {
+      margin-top: 1rem;
+      min-height: 3rem;
+      position: relative;
+      & > button:first-child {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+      }
+    }
+  }
+
+  /* backgrounds */
+  .Sunday {
+    background-color: Purple;
+    color: white;
+  }
+  .Monday {
+    background-color: Blue;
+    color: white;
+  }
+  .Tuesday {
+    background-color: Green;
+    color: white;
+  }
+  .Wednesday {
+    background-color: Yellow;
+    color: black;
+  }
+  .Thursday {
+    background-color: Brown;
+    color: white;
+  }
+  .Friday {
+    background-color: Pink;
+    color: black;
+  }
+  .Saturday {
+    background-color: Orange;
+    color: black;
+  }
+}

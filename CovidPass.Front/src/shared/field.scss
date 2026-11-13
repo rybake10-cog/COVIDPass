@@ -1,0 +1,10 @@
+/* © 2020 Partners HealthCare Technology & Innovation Department */
+.form-field {
+  padding: 0.25rem;
+  &.responsive-row {
+    flex-direction: column;
+    @media (min-width: 992px) {
+      flex-direction: row;
+    }
+  }
+}

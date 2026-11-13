@@ -1,0 +1,63 @@
+{
+  "common": {
+    "logout": "Cerrar sesión"
+  },
+  "loginPage": {
+    "forEmployeeOnly": "Esta página es para empleados de [Your Company] solamente.",
+    "mainText": "Durante la crisis del COVID-19, todos los empleados de [Your Company] que trabajen en alguna facilidad y provean cuidado clínico deben atestiguar que están en buen estado de salud todos los días antes de entrar a su edificio. Por favor infórmenos su estado de salud no más de dos horas antes de que comience su turno y luego siga las instrucciones.",
+    "useCredentials": "Por favor utilice sus credenciales de [Your Company] para ingresar a la página.",
+    "username": "Usuario",
+    "password": "Contraseña",
+    "login": "Ingresar"
+  },
+  "surveyPage": {
+    "titleForSelfService": "[Your Company] COVID Pass.",
+    "titleForManualMode": "[Your Company] COVID Pass Manual Mode.",
+    "descriptionForSelfService": "Por favor complete este cuestionario antes de comenzar cualquier turno en una facilidad de [Your Company]. Este cuestionario le indicará si es elegible para trabajar o no. El mismo no sustituye el consejo de un profesional de la salud.",
+    "descriptionForManualMode": "Entre su usuario idenficiación de empleado para que se completen automáticamente los próximos campos. Si el empleado o la empleada no conoce su usuario, por favor escriba su nombre y apellido.",
+    "employeeId": "Identificación de empleado",
+    "or": "Or",
+    "for": "para",
+    "UserId": "ID de usuario",
+    "lastName": "Apellido",
+    "firstName": "Nombre",
+    "email": "Correo electrónico",
+    "site": "Localización",
+    "initials": "Iniciales",
+    "symptoms": "Síntomas",
+    "symptomsQuestion": "¿Tiene usted alguno de estos síntomas?",
+    "fever": "Fiebre o se siente febril",
+    "soreThroat": "Dolor de garganta",
+    "cough": "Tos nueva (no relacionada a alguna condición crónica)",
+    "runnyNose": "Nueva congestión nasal o secreciones nasales (no relacionadas a alergias estacionales)",
+    "muscleAche": "Dolores musculares",
+    "newLossOfSmell": "Pérdida de olfato nueva",
+    "shortnessOfBreath": "Falta de aliento",
+    "noSymptoms": "Ningún síntoma",
+    "noSymptoms_text1": "Ninguno de los síntomas anteriores",
+    "noSymptoms_text2": "USTED ESTA APROBADO PARA TRABAJAR HOY.",
+    "noSymptoms_text3": "Al escribir mis iniciales en el encasillado, yo atestiguo que mis respuestas son ciertas.",
+    "noSymptoms_text4": "Escriba sus iniciales para atestiguar.",
+    "symptoms_text1": "Usted ha indicado que tiene uno o más de los síntomas anteriores",
+    "symptoms_text2": "¡USTED NO ESTA APROBADO PARA TRABAJAR HOY!",
+    "symptoms_text3": "NO VAYA A TRABAJAR. POR FAVOR LLAME A SU SUPERVISOR Y A LA LINEA TELEFONICA DE SALUD OCUPACIONAL DE COVID",
+    "symptoms_text4": "Additional INFO",
+    "symptoms_text5": "Si necesita asistencia médica inmediata, llame a su médico de cabecera o al 911",
+    "pressSubmit": "Por favor haga click en el enlace de “Enviar” para obtener su COVID Pass",
+    "submit": "Enviar",
+    "provideValue": "Provea un valor para "
+  },
+  "applicationPage": {
+    "nodata": "No hay información para mostrar.",
+    "covidPass": "COVID Pass",
+    "noSymptoms_clearedForWork": "APROBADO PARA TRABAJAR",
+    "noSymptoms_description": "Usted está aprobado(a) para trabajar y puede comenzar su turno luego de obtener una mascarilla del centro de distribución en su edificio.",
+    "symptoms_notClearedForWork": "NO  APROBADO PARA TRABAJAR",
+    "symptoms_description1": "Usted NO está aprobado para trabajar hoy y no se le permitirá entrar a su facilidad. Por favor contacte a su supervisor y a Salud Ocupacional al ",
+    "symptoms_description2": "Empleados en WDH en NH deben llamar al ",
+    "footer_sentToEmail": "Una copia de su atestiguación se le envió a su correo electrónico",
+    "footer_healthConcerns": "Si tiene alguna preocupación sobre su salud, por favor contacte a su médico o proveedor de salud.",
+    "footer_needAssistance": "Si necesita asistencia, por favor llame a la línea telefónica de Salud Ocupacional de COVID-19 al ",
+    "footer_returnToForm": "Regresar al formulario"
+  }
+}

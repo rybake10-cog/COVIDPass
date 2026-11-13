@@ -1,0 +1,97 @@
+.survey {
+  min-height: 100vh;
+  background: #f3f3f3;
+  img {
+    width: 100%;
+    max-width: 418px;
+    align-self: center;
+  }
+  &__orPanel {
+    padding: 0.5rem;
+    font-weight: 600;
+    font-size: 1.3rem;
+  }
+  &__container {
+    padding: 1rem;
+    background: white;
+    width: 100%;
+    @media (min-width: 992px) {
+      width: 50%;
+    }
+  }
+  &__hellotext {
+    text-align: center;
+    font-weight: 600;
+  }
+  &__resultInfo {
+    .message {
+      border-top: 1px solid #ccc;
+      width: 100%;
+      font-weight: 600;
+      text-align: center;
+      .large {
+        font-size: 1.8rem;
+      }
+      .medium {
+        font-size: 1.5rem;
+      }
+    }
+  }
+  &__bluePanel {
+    background: #486d8f;
+    color: white;
+    font-size: 1.3rem;
+    width: 100%;
+    padding: 1rem;
+  }
+  &__resultButtons {
+    margin-top: 1rem;
+  }
+  .buttonsPanel {
+    margin-top: 1rem;
+    position: relative;
+    & > button:first-child {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
+  }
+  .checkboxContainer {
+    width: 100%;
+    & > button:not(:first-child) {
+      margin-top: 1rem;
+    }
+  }
+  .form-field {
+    .form-label {
+      padding: 1rem;
+      font-weight: 600;
+      .red {
+        color: red;
+      }
+    }
+    &.placeOnTop {
+      .form-label {
+        align-self: flex-start;
+      }
+    }
+    @media (min-width: 992px) {
+      & > div {
+        width: 50%;
+      }
+    }
+  }
+  .initials {
+    width: 10rem;
+  }
+  .staticFieldValue {
+    padding: 1;
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+  .footerStyle {
+    margin: 40px;
+    font-size: 12px;
+    text-align: center;
+  }
+}

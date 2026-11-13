@@ -1,0 +1,38 @@
+.loginPage {
+  min-height: 100vh;
+  background: #f3f3f3;
+  img {
+    width: 100%;
+  }
+  &__text {
+    text-align: center;
+    font-weight: 500;
+  }
+  &__form {
+    padding: 1rem;
+    border-radius: 0.25rem;
+    background: white;
+    width: 100%;
+    @media (min-width: 992px) {
+      width: 50%;
+    }
+    .form-label {
+      padding: 0.5rem;
+      border: 0.1rem solid #008ab0;
+      background-color: #008ab0;
+      color: white;
+      font-weight: 600;
+      width: 9rem;
+      text-align: center;
+    }
+  }
+  .langSelector {
+    max-width: 9rem;
+    margin-right: 1rem;
+  }
+  .footerStyle {
+    margin: 40px;
+    font-size: 12px;
+    text-align: center;
+  }
+}

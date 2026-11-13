@@ -1,0 +1,74 @@
+{
+  "extends": [
+    //base
+    "eslint:recommended",
+    //ts
+    "plugin:@typescript-eslint/recommended",
+    //react
+    "plugin:react/recommended",
+    //prettier
+    "plugin:prettier/recommended",
+    "prettier/@typescript-eslint",
+    //promise
+    "plugin:promise/recommended",
+    //jsx
+    "plugin:jsx-a11y/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "prettier", "import", "jsx-a11y", "react", "react-hooks"],
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "rules": {
+    //core
+    "no-restricted-imports": ["error", { "patterns": ["../*"] }],
+    //react
+    "react/prop-types": "off",
+    "react/display-name": "off",
+    "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    //prettier
+    "prettier/prettier": ["warn", { "singleQuote": true, "jsxBracketSameLine": true, "printWidth": 120 }],
+    //typescript
+    "@typescript-eslint/member-naming": ["error", { "private": "^_" }],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/no-parameter-properties": "off",
+    "@typescript-eslint/camelcase": "off",
+    //import
+    "import/first": "error",
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        "groups": ["builtin", "external", "internal", "unknown", "parent", "sibling", "index"]
+      }
+    ],
+    "import/no-default-export": "error",
+    "import/no-useless-path-segments": "error",
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error",
+    //jsx
+    "jsx-a11y/no-onchange": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/no-autofocus": "off"
+  },
+  "settings": {
+    "import/resolver": "webpack",
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    }
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
+    "sourceType": "module", // Allows for the use of imports
+    "ecmaFeatures": {
+      "jsx": true // Allows for the parsing of JSX
+    }
+  }
+}

@@ -1,0 +1,22 @@
+/* © 2020 Partners HealthCare Technology & Innovation Department */
+@import "~normalize.css";
+
+html {
+  font-size: 16px;
+  font-family: Helvetica, Arial, sans-serif;
+  color: #444;
+}
+
+body {
+  background: #f0f0f0;
+}
+
+input,
+button,
+div {
+  outline: none;
+}
+
+* {
+  box-sizing: border-box;
+}
