@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: CovidPass!Ci12345
+        ports: ["1433:1433"]
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P 'CovidPass!Ci12345' -Q 'select 1'"
+          --health-interval 10s --health-timeout 5s --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Create test database
+        run: docker exec ${{ job.services.mssql.id }} /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P 'CovidPass!Ci12345' -Q "create database covidpass"
+      - run: dotnet restore CovidPass.sln
+      - run: dotnet build CovidPass.sln --no-restore -c Release
+      - name: Test
+        run: dotnet test CovidPass.sln --no-build -c Release --logger "console;verbosity=normal"
+        env:
+          COVIDPASS_TEST_SQL: Server=localhost,1433;Database=covidpass;User Id=sa;Password=CovidPass!Ci12345;Encrypt=True;TrustServerCertificate=True
+      - name: Check for vulnerable packages
+        run: |
+          dotnet list CovidPass.sln package --vulnerable --include-transitive | tee vulnerable.txt
+          ! grep -q "has the following vulnerable packages" vulnerable.txt
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: CovidPass.Front
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: CovidPass.Front/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npx cross-env NODE_ENV=production webpack --hide-modules
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t covidpass:ci .
+      - name: Smoke test
+        run: |
+          docker run -d --name covidpass -p 8080:8080 \
+            -e Database__MigrateOnStartup=false \
+            -e Auth__EntraId__TenantId=00000000-0000-0000-0000-000000000001 \
+            -e Auth__EntraId__ClientId=00000000-0000-0000-0000-000000000002 \
+            covidpass:ci
+          for i in $(seq 1 30); do curl -fs localhost:8080/employee/api/health && break; sleep 1; done
+          curl -fs localhost:8080/employee/ | grep -q app.js
+          test "$(curl -s -o /dev/null -w '%{http_code}' localhost:8080/employee/api/auth/getConfig)" = 401
+
+  infra:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: az bicep install
+      - run: az bicep build --file infra/main.bicep --stdout > /dev/null
+      - run: az bicep lint --file infra/main.bicep
