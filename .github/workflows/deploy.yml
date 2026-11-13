@@ -1,0 +1,51 @@
+name: Deploy to Azure
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency: deploy-azure
+
+# Repository variables (no secrets needed; sign-in uses GitHub OIDC federated credentials):
+#   AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID  - deployment identity
+#   AZURE_RESOURCE_GROUP                                     - target resource group
+#   COVIDPASS_ENTRA_CLIENT_ID                                - app registration used for sign-in
+#   COVIDPASS_SQL_ADMIN_LOGIN, COVIDPASS_SQL_ADMIN_OBJECT_ID - Entra ID group that administers Azure SQL
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: azure
+    env:
+      COVIDPASS_ENTRA_CLIENT_ID: ${{ vars.COVIDPASS_ENTRA_CLIENT_ID }}
+      COVIDPASS_SQL_ADMIN_LOGIN: ${{ vars.COVIDPASS_SQL_ADMIN_LOGIN }}
+      COVIDPASS_SQL_ADMIN_OBJECT_ID: ${{ vars.COVIDPASS_SQL_ADMIN_OBJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Provision infrastructure
+        id: infra
+        run: |
+          current=$(az containerapp show -g "${{ vars.AZURE_RESOURCE_GROUP }}" -n covidpass --query "properties.template.containers[0].image" -o tsv 2>/dev/null || true)
+          az deployment group create -g "${{ vars.AZURE_RESOURCE_GROUP }}" -n "covidpass-infra-${{ github.run_id }}" \
+            --parameters infra/main.bicepparam --parameters containerImage="$current" \
+            --query properties.outputs -o json > outputs.json
+          echo "acr=$(jq -r .acrName.value outputs.json)" >> "$GITHUB_OUTPUT"
+          echo "server=$(jq -r .acrLoginServer.value outputs.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push image
+        run: az acr build -r "${{ steps.infra.outputs.acr }}" -t "covidpass:${{ github.sha }}" .
+
+      - name: Deploy app
+        run: |
+          url=$(az deployment group create -g "${{ vars.AZURE_RESOURCE_GROUP }}" -n "covidpass-app-${{ github.run_id }}" \
+            --parameters infra/main.bicepparam --parameters containerImage="${{ steps.infra.outputs.server }}/covidpass:${{ github.sha }}" \
+            --query properties.outputs.appUrl.value -o tsv)
+          echo "Deployed to $url" >> "$GITHUB_STEP_SUMMARY"

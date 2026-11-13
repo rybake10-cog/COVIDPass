@@ -1,0 +1,8 @@
+<!-- © 2020 Partners HealthCare Technology & Innovation Department -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>

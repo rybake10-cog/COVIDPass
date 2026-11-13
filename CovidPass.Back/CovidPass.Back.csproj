@@ -1,0 +1,24 @@
+<!-- © 2020 Partners HealthCare Technology & Innovation Department -->
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnvironmentName>dev</EnvironmentName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CovidPass.Common\CovidPass.Common.csproj" />
+    <ProjectReference Include="..\CovidPass.Core\CovidPass.Core.csproj" />
+    <ProjectReference Include="..\CovidPass.Db\CovidPass.Db.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.5.2" />
+    <PackageReference Include="Azure.Identity" Version="1.21.0" />
+    <PackageReference Include="FluentMigrator.Runner.SqlServer" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient.Extensions.Azure" Version="7.1.2" />
+    <PackageReference Include="NLog" Version="6.2.2" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="6.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="CovidPass.Tests" />
+  </ItemGroup>
+</Project>

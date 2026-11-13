@@ -1,0 +1,11 @@
+/* © 2020 Partners HealthCare Technology & Innovation Department */
+.form-input {
+  padding: 0.5rem;
+  border: 0.1rem solid #d4d4d4;
+  width: 100%;
+  &--login {
+    border: 0.25rem solid rgb(60, 135, 51);
+    margin: 1rem;
+    padding: 1rem;
+  }
+}

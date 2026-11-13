@@ -1,0 +1,74 @@
+/* © 2020 Partners HealthCare Technology & Innovation Department */
+.button {
+  display: inline-block;
+  cursor: pointer;
+  background-color: #008ab0;
+  border: 1px solid #008ab0;
+  color: white;
+  font-size: 1em;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 0.25em;
+  padding: 1rem;
+  &:hover {
+    border: 1px solid #007a9c;
+    background-color: #007a9c;
+  }
+  &:active {
+    border: 1px solid #006c8a;
+    background-color: #006c8a;
+  }
+
+  &.link {
+    border: none;
+    background: none;
+    color: rgb(0, 0, 238);
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &.clear {
+    background: transparent;
+    color: rgb(66, 66, 66);
+    border: 1px solid rgb(167, 167, 167);
+    &:hover {
+      background: rgb(224, 224, 224);
+    }
+    &:active {
+      background: rgb(184, 184, 184);
+    }
+  }
+
+  $red1: hsla(0, 55%, 55%, 1);
+  $red2: hsla(0, 50%, 50%, 1);
+  $red3: hsla(0, 45%, 45%, 1);
+  &.red {
+    border: 1px solid $red1;
+    background: $red1;
+    &:hover {
+      border: 1px solid $red2;
+      background: $red2;
+    }
+    &:active {
+      border: 1px solid $red3;
+      background: $red3;
+    }
+  }
+
+  $green1: hsla(90, 50%, 50%, 1);
+  $green2: hsla(90, 45%, 45%, 1);
+  $green3: hsla(90, 40%, 40%, 1);
+  &.green {
+    border: 1px solid $green1;
+    background: $green1;
+    &:hover {
+      border: 1px solid $green2;
+      background: $green2;
+    }
+    &:active {
+      border: 1px solid $green3;
+      background: $green3;
+    }
+  }
+}
