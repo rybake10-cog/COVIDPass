@@ -71,7 +71,7 @@ namespace CovidPass.Core.Modules.Application.Submit
                 if (!string.IsNullOrWhiteSpace(email))
                 {
                     var body = GenerateEmail(model.NoSymptoms, firstName, lastName, login, email, created);
-                    await _emailService.Send(model.Email, subject, body);
+                    await _emailService.Send(email, subject, body);
                 }
                 return new ApplicationResponse
                 {

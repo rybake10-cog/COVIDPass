@@ -8,6 +8,7 @@ import { Router } from 'react-router-dom';
 
 import { store } from 'core/store';
 import { history } from 'core/history';
+import { initAuth } from 'core/entraAuth';
 import { App } from 'app/app';
 
 import './styles.scss';
@@ -22,4 +23,12 @@ const root = (
   </Provider>
 );
 
-ReactDOM.render(root, document.getElementById('root'));
+const start = async () => {
+  try {
+    await initAuth();
+  } finally {
+    ReactDOM.render(root, document.getElementById('root'));
+  }
+};
+
+start();

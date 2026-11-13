@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CovidPass.Core.Modules.Auth.GetAuthSettings;
 using CovidPass.Core.Modules.Auth.GetConfig;
+using CovidPass.Core.Modules.Auth.GetCurrentUser;
 using CovidPass.Core.Modules.Auth.GetWebToken;
 
 namespace CovidPass.Back.Controllers
@@ -21,6 +23,14 @@ namespace CovidPass.Back.Controllers
 
         [HttpPost(nameof(GetToken))]
         public Task<AuthInfoModel> GetToken([FromBody]GetWebTokenQuery model) => _mediator.Send(model);
+
+        [AllowAnonymous]
+        [HttpGet(nameof(GetAuthSettings))]
+        public Task<AuthSettings> GetAuthSettings([FromQuery]GetAuthSettingsQuery model) => _mediator.Send(model);
+
+        [Authorize]
+        [HttpGet(nameof(GetCurrentUser))]
+        public Task<AuthInfoModel> GetCurrentUser([FromQuery]GetCurrentUserQuery model) => _mediator.Send(model);
 
         [Authorize]
         [HttpGet(nameof(GetConfig))]

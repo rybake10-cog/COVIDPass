@@ -40,10 +40,9 @@ namespace CovidPass.Core.Infrastructure.Models
 
     public abstract class CommandHandler<TCommand> : BaseHandler, IRequestHandler<TCommand> where TCommand : Command
     {
-        public async Task<Unit> Handle(TCommand model, CancellationToken cancellationToken)
+        public Task Handle(TCommand model, CancellationToken cancellationToken)
         {
-            await Handle(model);
-            return Unit.Value;
+            return Handle(model);
         }
 
         public abstract Task Handle(TCommand model);

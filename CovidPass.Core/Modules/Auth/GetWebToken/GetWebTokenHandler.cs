@@ -19,22 +19,29 @@ namespace CovidPass.Core.Modules.Auth.GetWebToken
     {
         private readonly IConfiguration _config;
         private readonly IDirectoryService _directoryService;
+        private readonly IUserLookupService _userLookupService;
         private readonly ILogger<GetWebTokenHandler> _logger;
 
-        public GetWebTokenHandler(IConfiguration config, IDirectoryService directoryService, ILogger<GetWebTokenHandler> logger)
+        public GetWebTokenHandler(IConfiguration config, IDirectoryService directoryService, IUserLookupService userLookupService, ILogger<GetWebTokenHandler> logger)
         {
             _config = config;
             _directoryService = directoryService;
+            _userLookupService = userLookupService;
             _logger = logger;
         }
 
-        public override Task<AuthInfoModel> Handle(GetWebTokenQuery model)
+        public override async Task<AuthInfoModel> Handle(GetWebTokenQuery model)
         {
             var authConfig = _config.GetSection("Auth").Get<AuthConfigModel>();
+            if (authConfig.IsEntraId)
+            {
+                BadRequest("Password sign-in is disabled. Sign in with Microsoft Entra ID.");
+                return null;
+            }
 
             if (!(string.IsNullOrWhiteSpace(model.Login) || string.IsNullOrWhiteSpace(model.Password)))
             {
-                var domain = "YOUR_DOMAIN_NAME";
+                var domain = (_config.GetSection("Directory").Get<DirectoryConfigModel>() ?? new DirectoryConfigModel()).Domain;
                 var serviceUser = _config.GetValue<string>("ServiceUser");
                 var servicePassword = _config.GetValue<string>("ServicePassword");
                 if (_directoryService.IsUserLocked(domain, serviceUser, servicePassword, model.Login))
@@ -46,16 +53,14 @@ namespace CovidPass.Core.Modules.Auth.GetWebToken
                 var validated = _directoryService.ValidateUser(domain, model.Login, model.Password);
                 if (validated)
                 {
-                    var serviceUser2 = _config.GetValue<string>("ServiceUser2");
-                    var servicePassword2 = _config.GetValue<string>("ServicePassword2");
-                    var info = _directoryService.GetUserInfo(serviceUser2, servicePassword2, model.Login, null);
+                    var info = await _userLookupService.FindUser(model.Login, null);
                     var expires = DateTimeHelper.UtcNow.AddMinutes(authConfig.Expires);
                     var userId = info?.Username ?? model.Login;
 
                     var identity = GetClaimsIdentity(userId, info);
                     var token = GetToken(identity, expires, authConfig);
 
-                    return Task.FromResult(new AuthInfoModel
+                    return new AuthInfoModel
                     {
                         Login = userId,
                         Expires = expires,
@@ -67,7 +72,7 @@ namespace CovidPass.Core.Modules.Auth.GetWebToken
                         EmployeeNumber = info?.EmployeeNumber,
                         DepartmentName = info?.DepartmentName,
                         DepartmentNumber = info?.DepartmentNumber
-                    });
+                    };
                 }
             }
             BadRequest("username/password incorrect");

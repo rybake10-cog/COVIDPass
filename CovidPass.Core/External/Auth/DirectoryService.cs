@@ -2,6 +2,9 @@
 using System;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
+using System.Text;
+using CovidPass.Core.Models.Config;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Novell.Directory.Ldap;
 
@@ -16,10 +19,12 @@ namespace CovidPass.Core.External.Auth
     public class DirectoryService : IDirectoryService
     {
         private readonly ILogger<DirectoryService> _logger;
+        private readonly DirectoryConfigModel _directoryConfig;
 
-        public DirectoryService(ILogger<DirectoryService> logger)
+        public DirectoryService(ILogger<DirectoryService> logger, IConfiguration config)
         {
             _logger = logger;
+            _directoryConfig = config.GetSection("Directory").Get<DirectoryConfigModel>() ?? new DirectoryConfigModel();
         }
 
         public DirectoryUserInfo GetUserInfo(string serviceAccount, string servicePassword, string username, string employeeNumber)
@@ -30,12 +35,12 @@ namespace CovidPass.Core.External.Auth
             {
                 using (var connection = new LdapConnection { SecureSocketLayer = true })
                 {
-                    connection.Connect("YOUR_HOST", 1111);
-                    connection.Bind($"uid={serviceAccount},ou=internal,ou=people,dc=entdir,dc=your_org_name,dc=org", servicePassword);
+                    connection.Connect(_directoryConfig.Host, _directoryConfig.Port);
+                    connection.Bind(string.Format(_directoryConfig.BindDnTemplate, serviceAccount), servicePassword);
                     if (!connection.Bound)
                         throw new Exception($"Can't login to LDAP lookup service (login: {serviceAccount})");
 
-                    var filter = $"(&(employeeNumber={employeeNumber}))";
+                    var filter = $"(&(employeeNumber={EscapeLdapFilter(employeeNumber)}))";
                     var attribute = "employeeNumber";
                     var searchByUsername = false;
                     if (!string.IsNullOrWhiteSpace(username))
@@ -46,10 +51,10 @@ namespace CovidPass.Core.External.Auth
                             attribute = "mail";
                         else
                             attribute = "cn";
-                        filter = $"(&({attribute}={username}))";
+                        filter = $"(&({attribute}={EscapeLdapFilter(username)}))";
                     }
 
-                    var result = connection.Search("dc=entdir,dc=your_org_name,dc=org", LdapConnection.ScopeSub, filter, attrs, false).ToList();
+                    var result = connection.Search(_directoryConfig.SearchBase, LdapConnection.ScopeSub, filter, attrs, false).ToList();
 
                     var item = result.FirstOrDefault(x =>
                     {
@@ -77,6 +82,26 @@ namespace CovidPass.Core.External.Auth
             return null;
         }
 
+        internal static string EscapeLdapFilter(string value)
+        {
+            if (value == null)
+                return null;
+            var sb = new StringBuilder(value.Length);
+            foreach (var c in value)
+            {
+                switch (c)
+                {
+                    case '\\': sb.Append("\\5c"); break;
+                    case '*': sb.Append("\\2a"); break;
+                    case '(': sb.Append("\\28"); break;
+                    case ')': sb.Append("\\29"); break;
+                    case '\0': sb.Append("\\00"); break;
+                    default: sb.Append(c); break;
+                }
+            }
+            return sb.ToString();
+        }
+
         public string GetAttribute(string name, LdapAttributeSet collection)
         {
             return collection.ContainsKey(name) ? collection[name]?.StringValue : string.Empty;
@@ -84,6 +109,8 @@ namespace CovidPass.Core.External.Auth
 
         public bool IsUserLocked(string domain, string username, string password, string login)
         {
+            if (!OperatingSystem.IsWindows())
+                throw new PlatformNotSupportedException("Auth:Mode=Directory requires Windows. Use Auth:Mode=EntraId on Linux/containers.");
             try
             {
                 using (var context = new PrincipalContext(ContextType.Domain, domain, username, password))
@@ -106,6 +133,8 @@ namespace CovidPass.Core.External.Auth
 
         public bool ValidateUser(string domain, string username, string password)
         {
+            if (!OperatingSystem.IsWindows())
+                throw new PlatformNotSupportedException("Auth:Mode=Directory requires Windows. Use Auth:Mode=EntraId on Linux/containers.");
             try
             {
                 using (var context = new PrincipalContext(ContextType.Domain, domain))

@@ -1,20 +1,18 @@
 // © 2020 Partners HealthCare Technology & Innovation Department
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Identity;
 using FluentMigrator.Runner;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog;
 using NLog.Web;
-
 
 namespace CovidPass.Back
 {
@@ -27,13 +25,17 @@ namespace CovidPass.Back
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
-            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            var logger = LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
             try
             {
                 logger.Info("Start");
-                var host = CreateWebHostBuilder(args).Build();
-                var migrationRunner = host.Services.GetRequiredService<IMigrationRunner>();
-                migrationRunner.MigrateUp();
+                var host = CreateHostBuilder(args).Build();
+                var config = host.Services.GetRequiredService<IConfiguration>();
+                if (config.GetValue("Database:MigrateOnStartup", true))
+                {
+                    using var scope = host.Services.CreateScope();
+                    scope.ServiceProvider.GetRequiredService<IMigrationRunner>().MigrateUp();
+                }
                 await host.RunAsync();
             }
             catch (Exception ex)
@@ -43,13 +45,19 @@ namespace CovidPass.Back
             }
             finally
             {
-                //NLog.LogManager.Shutdown();
+                LogManager.Shutdown();
             }
-            await Task.Delay(10000);
         }
 
-        public static IHostBuilder CreateWebHostBuilder(string[] args) =>
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    // Secrets live in Azure Key Vault in Azure; names use "--" for sections, e.g. "Auth--Key".
+                    var vaultUri = config.Build()["KeyVault:Uri"];
+                    if (!string.IsNullOrWhiteSpace(vaultUri))
+                        config.AddAzureKeyVault(new Uri(vaultUri), new DefaultAzureCredential());
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
@@ -60,10 +68,6 @@ namespace CovidPass.Back
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    // logging.AddConsole();
-                    // logging.AddDebug();
-                    // logging.AddEventLog();
-                    // logging.AddEventSourceLogger();
                     logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
                 })
                 .UseNLog();

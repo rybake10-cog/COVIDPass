@@ -11,7 +11,7 @@ import { createAction } from './redux';
 // The react-router guys say that this will be what the official API probably looks like
 // https://github.com/ReactTraining/react-router/pull/6453#issuecomment-474600561
 
-export const useLocation = <P = {}>() => {
+export const useLocation = <P extends { [K in keyof P]?: string } = {}>() => {
   const context = useContext(__RouterContext) as RouteComponentProps<P>;
   return context.location;
 };
@@ -28,12 +28,12 @@ export const useLocationParams = <P extends ParsedQuery<string | number | boolea
   );
 };
 
-export function useMatch<P = {}>() {
+export function useMatch<P extends { [K in keyof P]?: string } = {}>() {
   const context = useContext(__RouterContext) as RouteComponentProps<P>;
   return context.match;
 }
 
-export function useMatchParams<P = {}>() {
+export function useMatchParams<P extends { [K in keyof P]?: string } = {}>() {
   const context = useContext(__RouterContext) as RouteComponentProps<P>;
   return context.match.params;
 }

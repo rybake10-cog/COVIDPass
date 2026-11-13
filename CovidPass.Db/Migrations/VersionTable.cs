@@ -15,5 +15,6 @@ namespace CovidPass.Db.Migrations
         public string DescriptionColumnName => "Description";
         public object ApplicationContext { get; set; }
         public bool OwnsSchema => true;
+        public bool CreateWithPrimaryKey => false;
     }
 }
